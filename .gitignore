@@ -1,0 +1,6 @@
+.workbuddy/
+.git/
+.DS_Store
+*.tmp.mp4
+*.bak
+/tmp/
