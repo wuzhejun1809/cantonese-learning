@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>粤语学习笔记</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
+    background: #f0f2f5; color: #1a1a2e; line-height: 1.7;
+    display: flex; min-height: 100vh;
+  }
+
+  /* === Sidebar === */
+  .sidebar {
+    width: 240px; background: #1a1a2e; color: #fff; padding: 24px 0;
+    position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto;
+    z-index: 100;
+  }
+  .sidebar-logo {
+    text-align: center; padding: 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 16px;
+  }
+  .sidebar-logo h2 { font-size: 20px; color: #2a9d8f; margin-bottom: 4px; }
+  .sidebar-logo p { font-size: 12px; color: rgba(255,255,255,0.5); }
+  .sidebar-nav { padding: 0 16px; }
+  .sidebar-nav a {
+    display: block; padding: 10px 12px; color: rgba(255,255,255,0.8);
+    text-decoration: none; border-radius: 8px; font-size: 14px;
+    transition: background 0.2s; margin-bottom: 4px;
+  }
+  .sidebar-nav a:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .sidebar-nav a.active { background: #2a9d8f; color: #fff; }
+  .sidebar-nav .day-num { font-weight: 700; }
+  .sidebar-nav .review-badge {
+    display: inline-block; background: #e63946; color: #fff;
+    padding: 1px 8px; border-radius: 10px; font-size: 11px; margin-left: 6px;
+  }
+  .sidebar-nav .topic-tag { font-size: 12px; color: rgba(255,255,255,0.5); margin-left: 4px; }
+  .sidebar-stats {
+    margin-top: 20px; padding: 16px; border-top: 1px solid rgba(255,255,255,0.1);
+    font-size: 13px; color: rgba(255,255,255,0.6);
+  }
+  .sidebar-stats strong { color: #2a9d8f; }
+
+  /* === Main Content === */
+  .main {
+    margin-left: 240px; padding: 24px 24px 40px 24px;
+    flex: 1; max-width: 800px;
+  }
+
+  .day-section {
+    margin-bottom: 40px;
+  }
+  .day-header {
+    text-align: center; padding: 28px 24px 24px;
+    border-radius: 16px 16px 0 0; color: #fff;
+  }
+  .day-header .day-badge {
+    display: inline-block; background: rgba(255,255,255,0.2);
+    padding: 4px 16px; border-radius: 20px; font-size: 13px; margin-bottom: 10px; letter-spacing: 1px;
+  }
+  .day-header h2 { font-size: 24px; font-weight: 700; }
+  .day-header .date { font-size: 14px; opacity: 0.85; margin-top: 4px; }
+  .day-header .topic {
+    display: inline-block; margin-top: 10px;
+    background: rgba(255,255,255,0.15); padding: 4px 14px; border-radius: 16px; font-size: 13px;
+  }
+
+  .dh1 { background: linear-gradient(135deg, #e63946 0%, #d62828 100%); }
+  .dh2 { background: linear-gradient(135deg, #2a9d8f 0%, #1d7870 100%); }
+  .dh3 { background: linear-gradient(135deg, #f77f00 0%, #e85d04 100%); }
+  .dh4 { background: linear-gradient(135deg, #457b9d 0%, #1d3557 100%); }
+  .dh5 { background: linear-gradient(135deg, #e76f51 0%, #d64531 100%); }
+  .dh6 { background: linear-gradient(135deg, #2a6f97 0%, #013a63 100%); }
+  .dh7 { background: linear-gradient(135deg, #e36414 0%, #9a031e 100%); }
+.dh8 { background: linear-gradient(135deg, #2d6a4f 0%, #1b4332 100%); }
+.dh-review { background: linear-gradient(135deg, #7b2cbf 0%, #5a189a 100%); }
+
+  /* === Word Card === */
+  .word-card {
+    background: #fff; border-radius: 16px; padding: 22px 20px; margin-bottom: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .wc1 { border-left: 5px solid #e63946; }
+  .wc2 { border-left: 5px solid #f77f00; }
+  .wc3 { border-left: 5px solid #2a9d8f; }
+  .wc4 { border-left: 5px solid #7b2cbf; }
+  .wc5 { border-left: 5px solid #457b9d; }
+
+  .word-header { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
+  .word-cantonese { font-size: 28px; font-weight: 700; color: #1a1a2e; }
+  .word-jp {
+    font-size: 14px; font-family: "SF Mono","Fira Code",monospace; font-weight: 600;
+    padding: 2px 8px; border-radius: 8px;
+  }
+  .wc1 .word-jp { color:#e63946; background:#ffe8e8; }
+  .wc2 .word-jp { color:#f77f00; background:#fff5e6; }
+  .wc3 .word-jp { color:#2a9d8f; background:#e8f8f5; }
+  .wc4 .word-jp { color:#7b2cbf; background:#f3eaff; }
+  .wc5 .word-jp { color:#457b9d; background:#e8f4f8; }
+
+  .audio-btn {
+    border: none; padding: 5px 14px; border-radius: 18px; font-size: 13px;
+    cursor: pointer; transition: transform 0.15s; display: inline-flex; align-items: center; gap: 3px;
+  }
+  .audio-btn:hover { transform: scale(1.06); }
+  .ab-w { background: #2a9d8f; color: #fff; }
+  .ab-s { background: #457b9d; color: #fff; font-size: 12px; padding: 4px 12px; }
+
+  .word-meaning { font-size: 17px; color: #333; margin-bottom: 12px; font-weight: 500; }
+  .word-meaning::before { content:"释义："; font-size:12px; color:#999; font-weight:400; }
+
+  .etymology {
+    background: #f3eaff; border-radius: 8px; padding: 12px 14px; margin-bottom: 12px;
+    border-left: 3px solid #7b2cbf;
+  }
+  .ety-label { font-size: 12px; color: #7b2cbf; font-weight: 600; margin-bottom: 4px; }
+  .ety-label::before { content:"📖 "; }
+  .ety-text { font-size: 14px; color: #4a3a5a; line-height: 1.6; }
+  .ety-text strong { color: #7b2cbf; }
+
+  .pron-sec { background: #f8f9fa; border-radius: 8px; padding: 10px 14px; margin-bottom: 12px; }
+  .pron-lbl { font-size: 12px; color: #888; margin-bottom: 3px; }
+  .pron-txt { font-size: 14px; color: #555; }
+  .tone { display:inline-block; background:#e3f2fd; color:#1565c0; padding:1px 6px; border-radius:5px; font-size:11px; margin-left:3px; }
+
+  .example {
+    background: #f0f7ff; border-radius: 8px; padding: 14px 14px; margin-bottom: 12px;
+    border-left: 3px solid #457b9d;
+  }
+  .ex-top { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+  .ex-lbl { font-size: 12px; color: #457b9d; font-weight: 600; }
+  .ex-can { font-size: 17px; color: #1a1a2e; margin-bottom: 3px; font-weight: 500; }
+  .ex-man { font-size: 14px; color: #666; margin-bottom: 8px; }
+
+  .char-bd {
+    background: #fafbfc; border-radius: 8px; padding: 10px 12px;
+    border: 1px solid #e1e4e8;
+  }
+  .char-bd-lbl { font-size: 11px; color: #999; margin-bottom: 5px; }
+  .char-row { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 13px; }
+  .ci { display:inline-flex; align-items:baseline; gap:3px; }
+  .ci .ch { font-size:15px; font-weight:600; color:#1a1a2e; }
+  .ci .jp { font-family:"SF Mono",monospace; color:#457b9d; font-size:12px; }
+  .ci .gl { color:#888; font-size:12px; }
+  .ci.u .ch { color:#e63946; }
+  .ci.u .jp { color:#e63946; font-weight:700; }
+  .ci.u .gl { color:#e63946; font-weight:500; }
+
+  .tip {
+    background: #fff9e6; border-radius: 8px; padding: 10px 14px;
+    border-left: 3px solid #f77f00; display: flex; gap: 8px; align-items: flex-start;
+  }
+  .tip-icon { font-size:16px; flex-shrink:0; line-height:1.6; }
+  .tip-txt { font-size: 14px; color: #5a4a1a; }
+  .tip-txt strong { color: #b8860b; }
+
+  .culture-box {
+    background: #fdf0f0; border-radius: 12px; padding: 16px 18px; margin-bottom: 14px;
+    border-left: 4px solid #e63946;
+  }
+  .culture-box h4 { font-size: 14px; color: #e63946; margin-bottom: 6px; }
+  .culture-box p { font-size: 13px; color: #555; line-height: 1.7; }
+  .culture-box table { width:100%; border-collapse:collapse; margin-top:8px; font-size:13px; }
+  .culture-box th { background:#fde8e8; color:#e63946; padding:5px 10px; text-align:left; }
+  .culture-box td { padding:5px 10px; border-bottom:1px solid #fde8e8; }
+
+  .day-footer {
+    text-align: center; padding: 16px; color: #999; font-size: 13px;
+    background: #fff; border-radius: 0 0 16px 16px; margin-bottom: 20px;
+  }
+
+  /* === Review Day === */
+  .review-grid {
+    background: #fff; border-radius: 0 0 16px 16px; padding: 20px; margin-bottom: 14px;
+  }
+  .review-grid h3 {
+    font-size: 16px; color: #7b2cbf; margin-bottom: 12px; text-align: center;
+  }
+  .rg-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .rg-table th {
+    background: #f3eaff; color: #7b2cbf; padding: 8px 10px; text-align: left;
+    font-weight: 600; border-bottom: 2px solid #7b2cbf;
+  }
+  .rg-table td {
+    padding: 8px 10px; border-bottom: 1px solid #ede8f0; vertical-align: top;
+  }
+  .rg-table tr:hover td { background: #faf8ff; }
+  .rg-table .can { font-size: 16px; font-weight: 600; color: #1a1a2e; }
+  .rg-table .jp { font-family: "SF Mono",monospace; font-size: 12px; color: #457b9d; }
+  .rg-table .day-tag {
+    display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 11px; font-weight: 600;
+  }
+  .rg-table .day-tag.d1 { background: #ffe8e8; color: #e63946; }
+  .rg-table .day-tag.d2 { background: #e8f8f5; color: #2a9d8f; }
+
+  .test-section {
+    background: #fff; border-radius: 16px; padding: 22px 20px; margin-bottom: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06); border-left: 5px solid #7b2cbf;
+  }
+  .test-section h3 {
+    font-size: 18px; color: #7b2cbf; margin-bottom: 14px; text-align: center;
+  }
+  .test-card {
+    background: #f8f5ff; border-radius: 12px; padding: 16px 18px; margin-bottom: 12px;
+    border: 1px solid #e8d8f8;
+  }
+  .test-card:last-child { margin-bottom: 0; }
+  .test-q {
+    font-size: 14px; color: #555; margin-bottom: 6px; font-weight: 600;
+  }
+  .test-q .qnum {
+    display: inline-block; background: #7b2cbf; color: #fff; width: 24px; height: 24px;
+    border-radius: 50%; text-align: center; line-height: 24px; font-size: 12px; margin-right: 6px;
+  }
+  .test-sentence {
+    font-size: 17px; color: #1a1a2e; margin-bottom: 6px; font-weight: 500;
+  }
+  .test-blank {
+    display: inline-block; min-width: 60px; border-bottom: 2px solid #7b2cbf;
+    text-align: center; color: transparent; cursor: pointer; transition: color 0.3s;
+  }
+  .test-blank.revealed { color: #7b2cbf; font-weight: 700; }
+  .test-options { font-size: 13px; color: #888; margin-bottom: 4px; }
+  .test-options span {
+    display: inline-block; background: #fff; border: 1px solid #ddd; padding: 2px 10px;
+    border-radius: 8px; margin-right: 6px; margin-bottom: 4px; cursor: pointer; transition: all 0.2s;
+  }
+  .test-options span:hover { border-color: #7b2cbf; color: #7b2cbf; }
+  .test-options span.correct { background: #d4edda; border-color: #28a745; color: #155724; }
+  .test-answer {
+    font-size: 13px; color: #7b2cbf; margin-top: 4px; display: none;
+    background: #f3eaff; padding: 6px 10px; border-radius: 6px;
+  }
+  .test-answer.show { display: block; }
+  .test-answer strong { color: #5a189a; }
+  .test-toggle {
+    font-size: 12px; color: #7b2cbf; cursor: pointer; margin-top: 6px;
+    text-decoration: underline; user-select: none;
+  }
+
+  .review-summary {
+    background: linear-gradient(135deg, #f3eaff 0%, #e8d8f8 100%);
+    border-radius: 16px; padding: 20px; margin-bottom: 14px; text-align: center;
+  }
+  .review-summary h3 { font-size: 16px; color: #5a189a; margin-bottom: 8px; }
+  .review-summary p { font-size: 14px; color: #6a5a7a; }
+  .review-summary .stat-row {
+    display: flex; justify-content: center; gap: 30px; margin-top: 12px;
+  }
+  .review-summary .stat-item { text-align: center; }
+  .review-summary .stat-num { font-size: 28px; font-weight: 700; color: #7b2cbf; }
+  .review-summary .stat-lbl { font-size: 12px; color: #8a7a9a; }
+
+  /* === Floating Nav Button (Mobile) === */
+  .float-nav-btn {
+    display: none; position: fixed; bottom: 20px; right: 20px;
+    width: 52px; height: 52px; border-radius: 50%;
+    background: #1a1a2e; color: #fff; font-size: 24px;
+    border: none; cursor: pointer; z-index: 200;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3); transition: transform 0.2s;
+    align-items: center; justify-content: center;
+  }
+  .float-nav-btn:hover { transform: scale(1.1); }
+  .float-nav-btn.open { background: #e63946; }
+
+  .float-menu {
+    display: none; position: fixed; bottom: 80px; right: 20px;
+    background: #1a1a2e; border-radius: 16px; padding: 12px;
+    z-index: 199; max-height: 60vh; overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4); min-width: 200px;
+  }
+  .float-menu.show { display: block; }
+  .float-menu a {
+    display: block; padding: 10px 14px; color: rgba(255,255,255,0.85);
+    text-decoration: none; border-radius: 8px; font-size: 14px;
+    transition: background 0.2s; margin-bottom: 2px;
+  }
+  .float-menu a:hover { background: rgba(255,255,255,0.15); color: #fff; }
+  .float-menu a.active { background: #2a9d8f; color: #fff; }
+  .float-menu .fm-stats { 
+    margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1);
+    font-size: 12px; color: rgba(255,255,255,0.5);
+  }
+  .float-menu .fm-stats strong { color: #2a9d8f; }
+  .float-menu .fm-qr {
+    margin-top: 10px; padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+  }
+  .float-menu .fm-qr svg { border-radius: 6px; }
+  .float-menu .fm-qr-label {
+    display: block; margin-top: 6px;
+    font-size: 11px; color: rgba(255,255,255,0.5);
+  }
+
+  /* === Responsive === */
+  @media (max-width: 1024px) {
+    .sidebar { display: none; }
+    .float-nav-btn { display: flex; }
+    .main { margin-left: 0; padding: 16px 16px 80px 16px; }
+  }
+
+  /* === Cycle Nav Bar === */
+  .cycle-nav {
+    display: flex; justify-content: space-between; align-items: center;
+    background: #fff; border-radius: 12px; padding: 12px 18px; margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 4px solid #2a9d8f;
+  }
+  .cycle-label { font-size: 15px; font-weight: 700; color: #1a1a2e; }
+  .cycle-links { font-size: 14px; }
+  .cn-link { color: #2a9d8f; text-decoration: none; font-weight: 600; }
+  .cn-link:hover { text-decoration: underline; }
+  .cn-next { color: #2a9d8f; font-weight: 600; }
+  .cn-next.cn-disabled { color: #999; font-weight: 400; }
+
+  /* === QR Code === */
+  .sidebar-qr {
+    margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+  }
+  .sidebar-qr svg { border-radius: 8px; }
+  .sidebar-qr .qr-label {
+    display: block; margin-top: 8px;
+    font-size: 11px; color: rgba(255,255,255,0.5);
+  }
+</style>
+</head>
+<body>
+<!-- ============ SIDEBAR ============ -->
+<nav class="sidebar">
+<div class="sidebar-logo">
+<h2>粤语学习笔记</h2>
+<p>第二部 · 每日5词 · 日积月累</p>
+</div>
+<div class="sidebar-nav">
+<a href="cantonese-index.html" style="text-align:center;background:rgba(42,157,143,0.2);margin-bottom:10px;">🏠 索引页</a>
+<a href="#day10" id="nav-day10"><span class="day-num">Day 10</span><span class="topic-tag">明日解锁</span></a>
+<a href="#day11" id="nav-day11" style="opacity:0.4;pointer-events:none;"><span class="day-num">Day 11</span><span class="topic-tag">即将解锁</span></a>
+<a href="#day12" id="nav-day12" style="opacity:0.4;pointer-events:none;"><span class="day-num">Day 12</span><span class="topic-tag">即将解锁</span></a>
+<a href="#day13" id="nav-day13" style="opacity:0.4;pointer-events:none;"><span class="day-num">Day 13</span><span class="topic-tag">即将解锁</span></a>
+<a href="#day14" id="nav-day14" style="opacity:0.4;pointer-events:none;"><span class="day-num">Day 14</span><span class="topic-tag">即将解锁</span></a>
+<a href="#day15" id="nav-day15" style="opacity:0.4;pointer-events:none;"><span class="day-num">Day 15</span><span class="topic-tag">即将解锁</span></a>
+<a href="#day16" id="nav-day16" style="opacity:0.4;pointer-events:none;"><span class="day-num">Day 16</span><span class="topic-tag">即将解锁</span></a>
+<a href="#day17" id="nav-day17" style="opacity:0.4;pointer-events:none;"><span class="day-num">Day 17</span><span class="topic-tag">即将解锁</span></a>
+<a href="#day18" id="nav-day18" style="opacity:0.4;pointer-events:none;"><span class="day-num">Day 18</span><span class="topic-tag">即将解锁</span></a></div>
+<div class="sidebar-stats">
+    已学单词：<strong>0</strong> 个<br/>
+    🚀 第二部即将开始！<br/>
+    首日：<strong>7/25 Day 10</strong><br/>
+    3天一小回顾 · 9天一大回顾
+  </div>
+<div class="sidebar-qr">
+<svg height="120" viewbox="0 0 41 41" width="120" xmlns="http://www.w3.org/2000/svg"><rect fill="#ffffff" height="41" rx="3" width="41"></rect><path d="M1,1H8V2H1zM9,1H12V2H9zM13,1H14V2H13zM19,1H20V2H19zM23,1H25V2H23zM26,1H30V2H26zM31,1H38V2H31zM1,2H2V3H1zM7,2H8V3H7zM9,2H12V3H9zM17,2H18V3H17zM20,2H21V3H20zM23,2H24V3H23zM25,2H26V3H25zM27,2H28V3H27zM31,2H32V3H31zM37,2H38V3H37zM1,3H2V4H1zM3,3H6V4H3zM7,3H8V4H7zM9,3H10V4H9zM11,3H13V4H11zM14,3H15V4H14zM16,3H21V4H16zM22,3H23V4H22zM29,3H30V4H29zM31,3H32V4H31zM33,3H36V4H33zM37,3H38V4H37zM1,4H2V5H1zM3,4H6V5H3zM7,4H8V5H7zM9,4H11V5H9zM12,4H13V5H12zM15,4H18V5H15zM21,4H22V5H21zM24,4H25V5H24zM26,4H27V5H26zM28,4H30V5H28zM31,4H32V5H31zM33,4H36V5H33zM37,4H38V5H37zM1,5H2V6H1zM3,5H6V6H3zM7,5H8V6H7zM14,5H16V6H14zM17,5H20V6H17zM24,5H25V6H24zM26,5H27V6H26zM28,5H30V6H28zM31,5H32V6H31zM33,5H36V6H33zM37,5H38V6H37zM1,6H2V7H1zM7,6H8V7H7zM9,6H10V7H9zM12,6H17V7H12zM20,6H21V7H20zM23,6H24V7H23zM27,6H28V7H27zM29,6H30V7H29zM31,6H32V7H31zM37,6H38V7H37zM1,7H8V8H1zM9,7H10V8H9zM11,7H12V8H11zM13,7H14V8H13zM15,7H16V8H15zM17,7H18V8H17zM19,7H20V8H19zM21,7H22V8H21zM23,7H24V8H23zM25,7H26V8H25zM27,7H28V8H27zM29,7H30V8H29zM31,7H38V8H31zM10,8H11V9H10zM13,8H14V9H13zM15,8H16V9H15zM18,8H20V9H18zM21,8H26V9H21zM29,8H30V9H29zM1,9H3V10H1zM5,9H8V10H5zM12,9H13V10H12zM14,9H19V10H14zM20,9H24V10H20zM25,9H26V10H25zM27,9H28V10H27zM32,9H33V10H32zM34,9H38V10H34zM2,10H4V11H2zM10,10H12V11H10zM13,10H14V11H13zM18,10H20V11H18zM24,10H25V11H24zM26,10H27V11H26zM28,10H31V11H28zM32,10H34V11H32zM35,10H37V11H35zM1,11H2V12H1zM4,11H10V12H4zM11,11H17V12H11zM18,11H19V12H18zM22,11H23V12H22zM24,11H25V12H24zM26,11H30V12H26zM34,11H35V12H34zM36,11H37V12H36zM1,12H3V13H1zM4,12H5V13H4zM6,12H7V13H6zM10,12H11V13H10zM12,12H13V13H12zM14,12H15V13H14zM16,12H26V13H16zM28,12H32V13H28zM34,12H36V13H34zM37,12H38V13H37zM2,13H3V14H2zM5,13H6V14H5zM7,13H8V14H7zM9,13H10V14H9zM13,13H15V14H13zM18,13H19V14H18zM21,13H24V14H21zM25,13H26V14H25zM29,13H30V14H29zM31,13H32V14H31zM35,13H36V14H35zM37,13H38V14H37zM2,14H3V15H2zM4,14H5V15H4zM6,14H7V15H6zM8,14H9V15H8zM10,14H11V15H10zM12,14H13V15H12zM14,14H15V15H14zM16,14H17V15H16zM18,14H19V15H18zM20,14H21V15H20zM22,14H24V15H22zM25,14H26V15H25zM27,14H28V15H27zM29,14H30V15H29zM31,14H32V15H31zM33,14H34V15H33zM35,14H38V15H35zM1,15H2V16H1zM7,15H8V16H7zM9,15H10V16H9zM11,15H12V16H11zM13,15H15V16H13zM16,15H17V16H16zM19,15H20V16H19zM21,15H25V16H21zM26,15H27V16H26zM28,15H29V16H28zM30,15H32V16H30zM33,15H34V16H33zM37,15H38V16H37zM1,16H8V17H1zM9,16H10V17H9zM11,16H12V17H11zM13,16H14V17H13zM15,16H16V17H15zM17,16H18V17H17zM19,16H20V17H19zM21,16H22V17H21zM23,16H24V17H23zM25,16H26V17H25zM27,16H28V17H27zM29,16H30V17H29zM31,16H38V17H31zM10,17H11V18H10zM13,17H14V18H13zM15,17H16V18H15zM18,17H20V18H18zM21,17H26V18H21zM29,17H30V18H29zM1,18H3V19H1zM5,18H8V19H5zM12,18H13V19H12zM14,18H19V19H14zM20,18H24V19H20zM25,18H26V19H25zM27,18H28V19H27zM32,18H33V19H32zM34,18H38V19H34zM2,19H4V20H2zM10,19H12V20H10zM13,19H14V20H13zM18,19H20V20H18zM24,19H25V20H24zM26,19H27V20H26zM28,19H31V20H28zM32,19H34V20H32zM35,19H37V20H35zM1,20H2V21H1zM4,20H10V21H4zM11,20H17V21H11zM18,20H19V21H18zM22,20H23V21H22zM24,20H25V21H24zM26,20H30V21H26zM34,20H35V21H34zM36,20H37V21H36zM1,21H3V22H1zM4,21H5V22H4zM6,21H7V22H6zM10,21H11V22H10zM12,21H13V22H12zM14,21H15V22H14zM16,21H26V22H16zM28,21H32V22H28zM34,21H36V22H34zM37,21H38V22H37zM2,22H3V23H2zM5,22H6V23H5zM7,22H8V23H7zM9,22H10V23H9zM13,22H15V23H13zM18,22H19V23H18zM21,22H24V23H21zM25,22H26V23H25zM29,22H30V23H29zM31,22H32V23H31zM35,22H36V23H35zM37,22H38V23H37zM2,23H3V24H2zM4,23H5V24H4zM6,23H7V24H6zM8,23H9V24H8zM10,23H11V24H10zM12,23H13V24H12zM14,23H15V24H14zM16,23H17V24H16zM18,23H19V24H18zM20,23H21V24H20zM22,23H24V24H22zM25,23H26V24H25zM27,23H28V24H27zM29,23H30V24H29zM31,23H32V24H31zM33,23H34V24H33zM35,23H38V24H35zM1,24H2V25H1zM7,24H8V25H7zM9,24H10V25H9zM11,24H12V25H11zM13,24H15V25H13zM16,24H17V25H16zM19,24H20V25H19zM21,24H25V25H21zM26,24H27V25H26zM28,24H29V25H28zM30,24H32V25H30zM33,24H34V25H33zM37,24H38V25H37zM1,25H8V26H1zM9,25H10V26H9zM11,25H12V26H11zM13,25H14V26H13zM15,25H16V26H15zM17,25H18V26H17zM19,25H20V26H19zM21,25H22V26H21zM23,25H24V26H23zM25,25H26V26H25zM27,25H28V26H27zM29,25H30V26H29zM31,25H38V26H31zM10,26H11V27H10zM13,26H14V27H13zM15,26H16V27H15zM18,26H20V27H18zM21,26H26V27H21zM29,26H30V27H29zM1,27H3V28H1zM5,27H8V28H5zM12,27H13V28H12zM14,27H19V28H14zM20,27H24V28H20zM25,27H26V28H25zM27,27H28V28H27zM32,27H33V28H32zM34,27H38V28H34zM2,28H4V29H2zM10,28H12V29H10zM13,28H14V29H13zM18,28H20V29H18zM24,28H25V29H24zM26,28H27V29H26zM28,28H31V29H28zM32,28H34V29H32zM35,28H37V29H35zM1,29H2V30H1zM4,29H10V30H4zM11,29H17V30H11zM18,29H19V30H18zM22,29H23V30H22zM24,29H25V30H24zM26,29H30V30H26zM34,29H35V30H34zM36,29H37V30H36zM1,30H3V31H1zM4,30H5V31H4zM6,30H7V31H6zM10,30H11V31H10zM12,30H13V31H12zM14,30H15V31H14zM16,30H26V31H16zM28,30H32V31H28zM34,30H36V31H34zM37,30H38V31H37zM2,31H3V32H2zM5,31H6V32H5zM7,31H8V32H7zM9,31H10V32H9zM13,31H15V32H13zM18,31H19V32H18zM21,31H24V32H21zM25,31H26V32H25zM29,31H30V32H29zM31,31H32V32H31zM35,31H36V32H35zM37,31H38V32H37zM2,32H3V33H2zM4,32H5V33H4zM6,32H7V33H6zM8,32H9V33H8zM10,32H11V33H10zM12,32H13V33H12zM14,32H15V33H14zM16,32H17V33H16zM18,32H19V33H18zM20,32H21V33H20zM22,32H24V33H22zM25,32H26V33H25zM27,32H28V33H27zM29,32H30V33H29zM31,32H32V33H31zM33,32H34V33H33zM35,32H38V33H35zM1,33H2V34H1zM7,33H8V34H7zM9,33H10V34H9zM11,33H12V34H11zM13,33H15V34H13zM16,33H17V34H16zM19,33H20V34H19zM21,33H25V34H21zM26,33H27V34H26zM28,33H29V34H28zM30,33H32V34H30zM33,33H34V34H33zM37,33H38V34H37zM1,34H8V35H1zM9,34H10V35H9zM11,34H12V35H11zM13,34H14V35H13zM15,34H16V35H15zM17,34H18V35H17zM19,34H20V35H19zM21,34H22V35H21zM23,34H24V35H23zM25,34H26V35H25zM27,34H28V35H27zM29,34H30V35H29zM31,34H38V35H31zM10,35H11V36H10zM13,35H14V36H13zM15,35H16V36H15zM18,35H20V36H18zM21,35H26V36H21zM29,35H30V36H29zM1,36H3V37H1zM5,36H8V37H5zM12,36H13V37H12zM14,36H19V37H14zM20,36H24V37H20zM25,36H26V37H25zM27,36H28V37H27zM32,36H33V37H32zM34,36H38V37H34zM2,37H4V38H2zM10,37H12V38H10zM13,37H14V38H13zM18,37H20V38H18zM24,37H25V38H24zM26,37H27V38H26zM28,37H31V38H28zM32,37H34V38H32zM35,37H37V38H35zM1,38H2V39H1zM4,38H10V39H4zM11,38H17V39H11zM18,38H19V39H18zM22,38H23V39H22zM24,38H25V39H24zM26,38H30V39H26zM34,38H35V39H34zM36,38H37V39H36zM1,39H3V40H1zM4,39H5V40H4zM6,39H7V40H6zM10,39H11V40H10zM12,39H13V40H12zM14,39H15V40H14zM16,39H26V40H16zM28,39H32V40H28zM34,39H36V40H34zM37,39H38V40H37zM2,40H3V41H2zM5,40H6V41H5zM7,40H8V41H7zM9,40H10V41H9zM13,40H15V41H13zM18,40H19V41H18zM21,40H24V41H21zM25,40H26V41H25zM29,40H30V41H29zM31,40H32V41H31zM35,40H36V41H35zM37,40H38V41H37z" fill="#1a1a2e"></path></svg>
+<span class="qr-label">扫码打开首页</span>
+</div>
+</nav>
+<!-- ============ Floating Nav (Mobile) ============ -->
+<button class="float-nav-btn" id="floatNavBtn" onclick="toggleFloatMenu()">☰</button>
+<div class="float-menu" id="floatMenu">
+<a href="cantonese-index.html" style="text-align:center;background:rgba(42,157,143,0.3);margin-bottom:8px;">🏠 索引页</a>
+<a href="#day10"><span class="day-num">Day 10</span> <span style="font-size:12px;color:rgba(255,255,255,0.5)">明日解锁</span></a><div class="fm-stats">
+    已学：<strong>0</strong> 词<br/>
+    🚀 第二部即将开始！<br/>
+    首日：<strong>Day 10</strong><br/>
+    3天一小回顾 · 9天一大回顾
+  </div>
+</div>
+<!-- ============ MAIN CONTENT ============ -->
+<main class="main">
+<!-- ============ CYCLE NAV BAR ============ -->
+<div class="cycle-nav">
+<span class="cycle-label">第二部 · Day 10-18</span>
+<span class="cycle-links">
+<a class="cn-link" href="cantonese-index.html">🏠 索引页</a>
+<a class="cn-link" href="cantonese-learning.html">← 第一部</a>
+</span>
+</div>
+<!-- ===== DAY 10: 明日解锁 ===== -->
+<section class="day-section" id="day10">
+<div class="day-header dh1">
+<div class="day-badge">DAY 10 · 07/25</div>
+<h2>🚀 第二部 · 明日开启</h2>
+<div class="date">2026 年 7 月 25 日 · 星期六</div>
+</div>
+<div class="review-summary">
+<h3>🎉 欢迎来到第二部！</h3>
+<p>第一部已掌握 40 个粤语核心词汇<br/>第二部将聚焦<strong>职场沟通、电话对话、租房买房</strong>等进阶场景</p>
+<div class="stat-row">
+<div class="stat-item"><div class="stat-num">0</div><div class="stat-lbl">本周词</div></div>
+<div class="stat-item"><div class="stat-num">40</div><div class="stat-lbl">累计已学</div></div>
+<div class="stat-item"><div class="stat-num">Day 10</div><div class="stat-lbl">明日开始</div></div>
+</div>
+</div>
+<div class="day-footer">🚀 第二部 · 明日 7/25 正式开启 · 不见不散</div>
+</section>
+</main>
+<script>
+  // Mobile-compatible audio player: fetch as blob to bypass Range request requirement
+  const _audioCache = {};
+  function playAudio(id) {
+    const audio = document.getElementById(id);
+    if (!audio) return;
+    if (_audioCache[id]) {
+      audio.currentTime = 0;
+      audio.play().catch(function(){});
+      return;
+    }
+    const url = audio.getAttribute('data-src');
+    if (!url) return;
+    fetch(url).then(function(r) { return r.blob(); }).then(function(blob) {
+      const objUrl = URL.createObjectURL(blob);
+      audio.src = objUrl;
+      _audioCache[id] = objUrl;
+      audio.play().catch(function(){});
+    }).catch(function(){});
+  }
+
+  const sections = document.querySelectorAll('.day-section');
+  const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
+  const floatLinks = document.querySelectorAll('.float-menu a');
+  const floatBtn = document.getElementById('floatNavBtn');
+  const floatMenu = document.getElementById('floatMenu');
+
+  function toggleFloatMenu() {
+    floatMenu.classList.toggle('show');
+    floatBtn.classList.toggle('open');
+    floatBtn.textContent = floatMenu.classList.contains('show') ? '✕' : '☰';
+  }
+
+  floatLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      floatMenu.classList.remove('show');
+      floatBtn.classList.remove('open');
+      floatBtn.textContent = '☰';
+    });
+  });
+
+  function updateActiveNav() {
+    let current = '';
+    sections.forEach(section => {
+      const top = section.offsetTop - 100;
+      if (window.scrollY >= top) {
+        current = section.id;
+      }
+    });
+    sidebarLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + current) {
+        link.classList.add('active');
+      }
+    });
+    floatLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + current) {
+        link.classList.add('active');
+      }
+    });
+  }
+
+  window.addEventListener('scroll', updateActiveNav);
+  updateActiveNav();
+</script>
+</body>
+</html>
